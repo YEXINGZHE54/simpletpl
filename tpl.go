@@ -1,8 +1,8 @@
 package simpletpl
 
 import (
-	"strconv"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -17,8 +17,8 @@ type (
 )
 
 const (
-	PREFIX   = "{{"
-	POSTFIX  = "}}"
+	PREFIX  = "{{"
+	POSTFIX = "}}"
 )
 
 var (
@@ -109,12 +109,12 @@ func Force(data interface{}, key string) (value string, err error) {
 	leninfo := strings.Split(key, ":")
 	key = leninfo[0]
 	if len(leninfo) > 1 {
-		vlen,err = strconv.Atoi(leninfo[1])
+		vlen, err = strconv.Atoi(leninfo[1])
 		if err != nil {
 			return
 		}
 	}
-	
+
 	fields := strings.Split(key, ".")
 	var ok bool
 	for _, k := range fields {
@@ -139,7 +139,7 @@ func Force(data interface{}, key string) (value string, err error) {
 		if vlen > 0 && len(value) > vlen {
 			value = value[:vlen]
 		}
-	case int:
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
 		var format string
 		if vlen > 0 {
 			format = fmt.Sprintf("%%0%dd", vlen)
