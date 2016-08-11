@@ -19,6 +19,9 @@ func TestRender(t *testing.T) {
 	tcases[1000000000] = "1000000000"
 	tcases[9999999999] = "9999999999"
 	tcases[-1] = "-000000001"
+	tcases[10000000000] = "0000000000"
+	tcases[10000000001] = "0000000001"
+	tcases[-10000000001] = "-000000001"
 	for i,suf := range tcases {
 		data["ID"] = i
 		id,err := tpl.Render(data)

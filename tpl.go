@@ -147,6 +147,13 @@ func Force(data interface{}, key string) (value string, err error) {
 			format = "%d"
 		}
 		value = fmt.Sprintf(format, v)
+		if vlen > 0 && len(value) > vlen {
+			if value[0] != '-' {
+				value = value[len(value)-vlen:len(value)]
+			} else {
+				value = "-" + value[len(value)-vlen+1:len(value)]
+			}
+		}
 	case []byte:
 		value = string(v)
 		if vlen > 0 && len(value) > vlen {
