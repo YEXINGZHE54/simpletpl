@@ -86,25 +86,29 @@ func (t *Template) Compile() (err error) {
 	return nil
 }
 
-func (t *Template) Render(data map[string]interface{}) (msg string, err error) {
+func (t *Template) Render(data map[string]interface{}) (msg string, cut []string, err error) {
 	var content []string
 	for _, s := range t.Content {
 		content = append(content, s)
 	}
 	for k, vlist := range t.Vars {
-		vstr, err := Force(data, k)
-		if err != nil {
-			return "", err
+		vstr, cutted, e := Force(data, k)
+		if e != nil {
+			err = e
+			return
 		}
 		for _, idx := range vlist {
 			content[idx] = vstr
+		}
+		if cutted {
+			cut = append(cut, k)
 		}
 	}
 	msg = strings.Join(content, "")
 	return
 }
 
-func Force(data interface{}, key string) (value string, err error) {
+func Force(data interface{}, key string) (value string, cutted bool, err error) {
 	vlen := 0
 	leninfo := strings.Split(key, ":")
 	key = leninfo[0]
@@ -138,6 +142,7 @@ func Force(data interface{}, key string) (value string, err error) {
 		value = v
 		if vlen > 0 && len(value) > vlen {
 			value = value[:vlen]
+			cutted = true
 		}
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
 		var format string
@@ -153,11 +158,13 @@ func Force(data interface{}, key string) (value string, err error) {
 			} else {
 				value = "-" + value[len(value)-vlen+1:len(value)]
 			}
+			cutted = true
 		}
 	case []byte:
 		value = string(v)
 		if vlen > 0 && len(value) > vlen {
 			value = value[:vlen]
+			cutted = true
 		}
 	}
 	return

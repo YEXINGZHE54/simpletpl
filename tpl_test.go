@@ -24,7 +24,7 @@ func TestRender(t *testing.T) {
 	tcases[-10000000001] = "-000000001"
 	for i,suf := range tcases {
 		data["ID"] = i
-		id,err := tpl.Render(data)
+		id,_,err := tpl.Render(data)
 		if err != nil {
 			t.Fatal(err)
 		}
