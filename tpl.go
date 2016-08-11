@@ -131,11 +131,11 @@ func Force(data interface{}, key string) (value string, err error) {
 			return
 		}
 	}
-	switch data.(type) {
+	switch v := data.(type) {
 	case map[string]interface{}:
 		err = BADKEY_ERROR
 	case string:
-		value = data.(string)
+		value = v
 		if vlen > 0 && len(value) > vlen {
 			value = value[:vlen]
 		}
@@ -146,9 +146,8 @@ func Force(data interface{}, key string) (value string, err error) {
 		} else {
 			format = "%d"
 		}
-		value = fmt.Sprintf(format, data.(int))
+		value = fmt.Sprintf(format, v)
 	case []byte:
-		v, _ := data.([]byte)
 		value = string(v)
 		if vlen > 0 && len(value) > vlen {
 			value = value[:vlen]
